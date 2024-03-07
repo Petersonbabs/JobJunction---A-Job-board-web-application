@@ -1,16 +1,18 @@
 const Employees = require("../models/employee");
+const fetchDocs = require("../middlewares/fetching");
 
 // Get all employees
 const getAllEmployees = async (req, res, next) => {
 
-    // pagination
-    const pageSize = 10
-    const currentPage = +req.query.pageNum || 1
+
 
 
     try {
-        const numOfEmployees = await Employees.find({}).estimatedDocumentCount();
-        const employees = await Employees.find().sort({ createdAt: -1 }).skip(pageSize * (currentPage - 1)).limit(pageSize)
+
+        const { data, currentPage,pages, numOfDocs } = await fetchDocs(req, Employees)
+
+        const numOfEmployees = numOfDocs
+        const employees = data
 
         if (!employees || employees.length == 0) {
             res.status(404).json({
@@ -22,7 +24,7 @@ const getAllEmployees = async (req, res, next) => {
 
         res.status(200).json({
             status: "success",
-            pages: Math.ceil(numOfEmployees / pageSize),
+            pages,
             currentPage,
             numOfEmployees,
             employees
@@ -140,7 +142,7 @@ const deleteEmployee = async (req, res, next) => {
             })
             return
         }
-        
+
         const user = await Employees.findOne({ email: req.user.email })
         if (!user) {
             res.status(404).json({

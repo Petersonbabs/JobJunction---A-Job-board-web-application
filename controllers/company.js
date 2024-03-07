@@ -1,18 +1,20 @@
 const Companies = require("../models/company");
+const Jobs = require("../models/job");
+const fetchDocs = require("../middlewares/fetching");
+
 
 
 // Get all Companies
 const getAllCompanies = async (req, res, next) => {
 
-    // pagination
-    const pageSize = 10
-    const currentPage = +req.query.pageNum || 1
+
 
     try {
 
-        const numOfCompanies = await Companies.find({}).estimatedDocumentCount();
+        const { data, numOfDocs, pages, currentPage } = await fetchDocs(req, Companies)
 
-        const companies = await Companies.find().sort({ createdAt: -1 }).skip(pageSize * (currentPage - 1)).limit(pageSize)
+        const numOfCompanies = numOfDocs
+        const companies = data
 
         if (!companies) {
             res.status(404).json({
@@ -24,7 +26,7 @@ const getAllCompanies = async (req, res, next) => {
 
         res.status(200).json({
             status: "success",
-            pages: Math.ceil(numOfCompanies / pageSize),
+            pages,
             currentPage,
             numOfCompanies,
             companies
@@ -117,7 +119,7 @@ const deleteCompany = async (req, res, next) => {
             })
             return
         }
-        
+
         const user = await Companies.findOne({ email: req.user.email })
 
         if (!user) {
@@ -162,5 +164,38 @@ const getCompanyDashboard = async (req, res, next) => {
     }
 }
 
+const getCompanyJobs = async (req, res, next) => {
 
-module.exports = { getAllCompanies, getSingleCompany, getCompanyDashboard, updateCompany, deleteCompany }
+    const jobsCriteria = { company: req.params.id }
+
+    try {
+        const { data, currentPage, pages, numOfDocs } = await fetchDocs(req, Jobs, jobsCriteria);
+
+        const numOfJobs = numOfDocs
+        const jobs = await data
+
+        if (!jobs) {
+            res.status(404).json({
+                status: "failed",
+                message: "unable to fetch the jobs in this company"
+            })
+
+            return
+        }
+
+        res.status(200).json({
+            status: "success",
+            numOfJobs,
+            currentPage,
+            pages,
+            jobs
+        })
+
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+}
+
+
+module.exports = { getAllCompanies, getSingleCompany, getCompanyDashboard, updateCompany, deleteCompany, getCompanyJobs }

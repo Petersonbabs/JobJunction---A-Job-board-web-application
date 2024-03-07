@@ -34,7 +34,7 @@ const isAuthenticated = async (req, res, next) => {
 }
 
 
-const isADmin = async (req, res, next) => {
+const isAdmin = async (req, res, next) => {
     try {
         if (req.user.role !== "admin") {
             res.status(403).json({
@@ -91,4 +91,4 @@ const isCompany = async (req, res, next) => {
         next(error)
     }
 }
-module.exports = { isAuthenticated, isEmployee, isCompany, isADmin }
+module.exports = { isAuthenticated, isEmployee, isCompany, isAdmin }

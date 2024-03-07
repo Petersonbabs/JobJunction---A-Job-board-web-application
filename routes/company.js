@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { updateCompany, deleteCompany } = require("../controllers/company");
+const { updateCompany, deleteCompany, getCompanyJobs } = require("../controllers/company");
 const { getAllCompanies, getSingleCompany, getCompanyDashboard } = require("../controllers/company");
 const { isAuthenticated, isCompany } = require("../middlewares/auth");
 
@@ -13,6 +13,8 @@ router.route("/dashboard")
 
 
 router.route("/:id").get(getSingleCompany).patch(isAuthenticated, isCompany, updateCompany).delete(isAuthenticated, deleteCompany)
+
+router.route("/:id/jobs").get(getCompanyJobs)
 
 
 module.exports = router

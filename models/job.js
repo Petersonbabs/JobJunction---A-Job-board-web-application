@@ -35,9 +35,9 @@ const jobSchema = new mongoose.Schema({
 
     category: {
         // todo
-        type: String,
-        required: [true]
-        // ref: "category"
+        type: mongoose.Schema.Types.ObjectId,
+        // required: [true, "Job must belong to a category"],
+        ref: "categories"
     },
 
     hiringNum: {

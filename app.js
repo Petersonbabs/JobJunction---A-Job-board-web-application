@@ -10,6 +10,7 @@ const authRouter = require("./routes/auth");
 const jobRouter = require("./routes/job");
 const userRouter = require("./routes/users");
 const companyRouter = require("./routes/company");
+const categoryRouter = require("./routes/category");
 
 const app = express()
 
@@ -36,6 +37,8 @@ app.use("/api/v1/employees", userRouter);
 app.use("/api/v1/employee", userRouter);
 app.use("/api/v1/companies", companyRouter)
 app.use("/api/v1/company", companyRouter)
+app.use("/api/v1/category", categoryRouter)
+app.use("/api/v1/categories", categoryRouter)
 
 
 app.all("*", (req, res)=>{

@@ -1,13 +1,18 @@
 const Jobs = require("../models/job");
+const Categories = require("../models/category");
+const fetchDocs = require("../middlewares/fetching");
 
 // Create Job
 const createJob = async (req, res, next) => {
 
     const { title, description, salary, requirements, applicationDeadline, category, hiringNum, feedback } = req.body
 
+    
     try {
+        
+        const assignedCategory = await Categories.findById(category);
 
-        const job = await Jobs.create({ title, description, salary, requirements, applicationDeadline, category, hiringNum, feedback, company: req.user.id })
+        const job = await Jobs.create({ title, description, salary, requirements, applicationDeadline, category : assignedCategory.id, hiringNum, feedback, company: req.user.id })
 
         if (!job) {
             res.status(404).json({
@@ -46,16 +51,17 @@ const getAllJobs = async (req, res, next) => {
             ]
         }
     }
-    console.log(queryCriteria);
 
-    // pagination
-    const pageSize = 10
-    const currentPage = +req.query.pageNum || 1
+    
 
 
     try {
-        const numOfJobs = await Jobs.find(queryCriteria).estimatedDocumentCount();
-        const jobs = await Jobs.find().sort({ createdAt: -1 }).skip(pageSize * (currentPage - 1)).limit(pageSize).populate("company")
+
+        const {data, numOfDocs, currentPage, pages} = await fetchDocs(req, Jobs, queryCriteria)
+
+        const numOfJobs = numOfDocs
+        
+        const jobs = data
 
         if (!jobs || jobs.length == 0) {
             res.status(404).json({
@@ -67,7 +73,7 @@ const getAllJobs = async (req, res, next) => {
 
         res.status(200).json({
             status: "success",
-            pages: Math.ceil(numOfJobs / pageSize),
+            pages,
             currentPage,
             numOfJobs,
             jobs
