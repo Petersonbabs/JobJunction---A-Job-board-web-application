@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const { getAllApplications } = require("../controllers/application");
 const {  updateEmployee, deleteEmployee } = require("../controllers/employee");
 const { getAllEmployees, getSingleEmployee, getEmployeeDasboard } = require("../controllers/employee");
 const { isAuthenticated, isEmployee } = require("../middlewares/auth");
@@ -13,5 +14,8 @@ router.route("/:id")
 .get(getSingleEmployee)
 .patch(isAuthenticated, isEmployee, updateEmployee)
 .delete(isAuthenticated, isEmployee, deleteEmployee)
+
+// employee applications
+router.route("/:userid/applications").get(isAuthenticated, isEmployee, getAllApplications);
 
 module.exports = router

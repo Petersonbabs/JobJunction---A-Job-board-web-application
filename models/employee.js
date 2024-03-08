@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs")
 
 const employeeSchema = new mongoose.Schema({
+  
     fullName: {
         type: String,
         required: [true, "Your name is required."],
@@ -35,9 +36,6 @@ const employeeSchema = new mongoose.Schema({
     },
 
 
-    // application: {
-      
-    // }
 
     
     

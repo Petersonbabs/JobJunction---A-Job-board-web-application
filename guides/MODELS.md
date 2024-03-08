@@ -41,6 +41,8 @@ Represents individual job listings posted by employers.
 
 Represents job applications submitted by job seekers for specific job listings.
 Attributes may include the applicant's information, resume, cover letter, application status, etc.
+
+status values: pending review, interviewing, offer extended, offer accepted, closed, employed
 May have a foreign key relationship with the Job Listing model.
 
 # Company Profile Model:
