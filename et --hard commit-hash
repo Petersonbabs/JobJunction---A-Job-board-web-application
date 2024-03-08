@@ -1,0 +1,48 @@
+[33mcommit 52fb205870a93bb707712ac8c3b4de9241f7450e[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Merge: 779ee8e 29d3890
+Author: petersonbabs <timiebabs@gmail.com>
+Date:   Fri Mar 8 21:58:17 2024 +0100
+
+    Merge branch 'main' of https://github.com/Petersonbabs/JobJunction-API--A-Job-board-web-application
+
+[33mcommit 779ee8e5ac21a1e61151b5df8ab763b51e249d9d[m
+Author: petersonbabs <timiebabs@gmail.com>
+Date:   Fri Mar 8 21:55:32 2024 +0100
+
+    quick adjustment on the cloudinary configuration
+
+[33mcommit 29d38902124af2728e497bba2785a30fd50ebd55[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: peter babs <128394913+Petersonbabs@users.noreply.github.com>
+Date:   Fri Mar 8 21:47:43 2024 +0100
+
+    Delete node_modules directory
+
+[33mcommit 57e0cf04b8a7d976159d9ca76520c72561199ede[m
+Author: peter babs <128394913+Petersonbabs@users.noreply.github.com>
+Date:   Fri Mar 8 21:46:40 2024 +0100
+
+    Deleted directory
+
+[33mcommit edeef780f93b4118e6a5005656dd69d8b36deeda[m
+Author: petersonbabs <timiebabs@gmail.com>
+Date:   Fri Mar 8 21:33:40 2024 +0100
+
+    I just completed the controller for allowing jos seekers upload thier resume alogside the application details
+
+[33mcommit 7799c6945801c10b2e2416d85670a72c5663a7f4[m
+Author: petersonbabs <timiebabs@gmail.com>
+Date:   Fri Mar 8 11:13:10 2024 +0100
+
+    added the controller for applying to jobs and modifying the details of the application.
+
+[33mcommit 6e0a749bc0a28b9fab425da2aea943499ef63293[m
+Author: petersonbabs <timiebabs@gmail.com>
+Date:   Thu Mar 7 15:52:43 2024 +0100
+
+    done creating category model, controllers, and reference with jobs and companies
+
+[33mcommit a1f711a693dbcc272728162debc59f208152ecd5[m
+Author: petersonbabs <timiebabs@gmail.com>
+Date:   Thu Mar 7 10:18:06 2024 +0100
+
+    first commit
