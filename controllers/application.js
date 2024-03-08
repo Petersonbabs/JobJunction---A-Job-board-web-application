@@ -5,13 +5,14 @@ const fetchData = require("../middlewares/fetching");
 // Create Application (employee only)
 const createApplication = async (req, res, next) => {
 
-    const { resume, applicationStatus, message } = req.body
+    const { applicationStatus, message, resume } = req.body
 
-    try {
+    try { 
+
 
         const { company } = await Jobs.findById(req.params.id)
 
-        const application = await Applications.create({ candidate: req.user.id, resume, applicationStatus, job: req.params.id, message, company })
+        const application = await Applications.create({ candidate: req.user.id, applicationStatus, job: req.params.id, message, company, resume: resume.secure_url })
 
         if (!application) {
             res.status(404).json({

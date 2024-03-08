@@ -4,9 +4,8 @@ const morgan = require("morgan");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const errorHandler = require("./errror/error");
-const { cloudinaryConfig, uploader } = require("./middlewares/cloudinary");
-const { dataUri, upload } = require("./middlewares/multer");
-const fileUpload = require("express-fileupload");
+const { cloudinaryConfig} = require("./middlewares/cloudinary");
+const { upload } = require("./middlewares/multer");
 
 
 // Imported Routers
@@ -16,7 +15,6 @@ const userRouter = require("./routes/users");
 const companyRouter = require("./routes/company");
 const categoryRouter = require("./routes/category");
 const applicationRouter = require("./routes/application");
-const uploadFile = require("./controllers/upload");
 
 const app = express()
 
@@ -26,16 +24,12 @@ app.use(express.json());
 app.use(morgan("dev"))
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-// app.use(fileUpload({useTempFiles: true}))
 app.use("*", cloudinaryConfig)
 
 
 
 // ENDPOINTS
-app.post("/api/v1/upload", upload.single("image"), uploadFile)
 app.get("/api/v1", (req, res) => { res.send("welcome to jobjunction api version 1") })
-
-
 
 
 // ROUTED ENDPOINTS
@@ -48,7 +42,7 @@ app.use("/api/v1/companies", companyRouter)
 app.use("/api/v1/company", companyRouter)
 app.use("/api/v1/category", categoryRouter)
 app.use("/api/v1/categories", categoryRouter)
-app.use("/api/v1/apply", applicationRouter)
+app.use("/api/v1/apply", upload.single('resume'), applicationRouter)
 app.use("/api/v1/applications", applicationRouter)
 
 

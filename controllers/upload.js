@@ -1,13 +1,44 @@
-const { dataUri, upload } = require("../middlewares/multer");
-const { cloudinaryConfig, uploader } = require("../middlewares/cloudinary");
+const { dataUri } = require("../middlewares/multer");
+const { uploader } = require("../middlewares/cloudinary");
 
 
 
 const uploadFile = async (req, res, next) => {
+    try {
 
 
-    console.log(req.body);
+        if (!req.file) {
+            console.log("No file received");
+            return res.send({
+                success: false
+            });
 
+        } else {
+
+            const file = dataUri(req).content;
+
+            const result = await uploader.upload(file, {
+                folder: "jobjunction/resumes"
+            })
+
+            req.body.resume = result
+            next()
+
+
+        }
+
+
+
+
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+
+
+};
+
+const uploadResume = async (req, res, next) => {
     try {
 
         if (!req.file) {
@@ -15,17 +46,14 @@ const uploadFile = async (req, res, next) => {
                 status: 404,
                 message: "No file was recieved."
             })
- 
+
             return
         } else {
-            const file = dataUri(req);
-            const resume = await uploader.upload(file, { folder: "/jobjunction/resumes" })
-            res.status(200).json({
-                status: "success",
-                message: "Resume uploader successfully",
+            const file = dataUri(req).content;
+            const resume = await uploader.upload(file, { folder: "jobjunction/resumes" })
 
-                resume
-            })
+            req.resume =
+                next()
         }
 
     } catch (error) {
@@ -33,7 +61,6 @@ const uploadFile = async (req, res, next) => {
         next(error);
     }
 
-
 }
 
-module.exports = uploadFile
+module.exports = { uploadFile, uploadResume }

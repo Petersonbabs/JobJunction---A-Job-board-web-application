@@ -1,20 +1,14 @@
 const multer = require("multer");
-const DataUri = require("datauri/parser");
+const Datauri = require('datauri/parser');
 const path = require("path");
 
-// creating storage
-const storage = multer.memoryStorage();
-
+const storage = multer.memoryStorage()
 const upload = multer({storage: storage})
 
-const duri = new DataUri()
+const  dUri = new Datauri();
 
-const dataUri = (req)=>{
-    
-    duri.format( path.extname(req.file.originalname).toString(), req.file.buffer )
-    console.log(req.file);
-    return
+const dataUri = (req) => {
+    return dUri.format( path.extname(req.file.originalname).toString(), req.file.buffer )
 }
 
-
-module.exports = {upload, dataUri}
+module.exports = { upload, dataUri };
