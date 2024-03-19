@@ -12,12 +12,12 @@ router.route("/")
 router.route("/dashboard")
 .get(isAuthenticated, isCompany, getCompanyDashboard);
 
+// view all applications for a single job
+router.route("/applications").get(isAuthenticated, isCompany, getAllApplications);
 
 router.route("/:id").get(getSingleCompany).patch(isAuthenticated, isCompany, updateCompany).delete(isAuthenticated, deleteCompany)
 
 router.route("/:id/jobs").get(getCompanyJobs)
 
-// view all applications for a single job
-router.route("/:jobid/applications").get(isAuthenticated, isCompany, getAllApplications);
 
 module.exports = router

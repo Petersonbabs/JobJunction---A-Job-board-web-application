@@ -35,53 +35,49 @@ const createApplication = async (req, res, next) => {
 
 }
 
+
+
+
 // View all single job applications (employees vs company)
 const getAllApplications = async (req, res, next) => {
+    res.json({message: "your aplications"})
 
-    const applicationCriteria = {}
-    console.log(req.params.jobid)
+    // const applicationCriteria = {}
+    
 
-    if (req.params.jobid) {
-        console.log("company getting aplications");
-        applicationCriteria.job = req.params.jobid
-    }
+    // if (req.user.role == "company") {
+    //     applicationCriteria.company = req.user.id;
+    // }
 
-    console.log(applicationCriteria);
+    // try {
+        
 
-    if (req.user.role == "employee") {
-        applicationCriteria.candidate = req.user.id;
-    }
+    //     const { data, pages, numOfDocs, currentPage } = await fetchData(req, Applications, applicationCriteria);
 
-    try {
-        const datas = await Applications.find(applicationCriteria)
-        console.log(datas);
+    //     const applications = data
+    //     const numOfApplications = numOfDocs
 
-        const { data, pages, numOfDocs, currentPage } = await fetchData(req, Applications, applicationCriteria);
+    //     if (!applications) {
+    //         res.status(404).json({
+    //             status: "failed",
+    //             message: "unable to fetch applications"
+    //         })
 
-        const applications = data
-        const numOfApplications = numOfDocs
+    //         return
+    //     }
 
-        if (!applications) {
-            res.status(404).json({
-                status: "failed",
-                message: "unable to fetch applications"
-            })
+    //     res.status(200).json({
+    //         status: "success",
+    //         pages,
+    //         currentPage,
+    //         numOfApplications,
+    //         applications
+    //     })
 
-            return
-        }
-
-        res.status(200).json({
-            status: "success",
-            pages,
-            currentPage,
-            numOfApplications,
-            applications
-        })
-
-    } catch (error) {
-        console.log(error)
-        next(error)
-    }
+    // } catch (error) {
+    //     console.log(error)
+    //     next(error)
+    // }
 
 }
 

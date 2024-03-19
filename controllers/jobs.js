@@ -1,18 +1,19 @@
 const Jobs = require("../models/job");
 const Categories = require("../models/category");
 const fetchDocs = require("../middlewares/fetching");
+const { Console } = require("console");
 
 // Create Job
 const createJob = async (req, res, next) => {
 
-    const { title, description, salary, requirements, applicationDeadline, category, hiringNum, feedback } = req.body
+    const { title, description, salary, requirements, applicationDeadline, category, hiringNum, feedback, location, gender, jobType } = req.body
 
     
     try {
         
         const assignedCategory = await Categories.findById(category);
 
-        const job = await Jobs.create({ title, description, salary, requirements, applicationDeadline, category : assignedCategory.id, hiringNum, feedback, company: req.user.id })
+        const job = await Jobs.create({ title, description, salary, requirements, applicationDeadline, location, gender, jobType, category : assignedCategory.id, hiringNum, feedback, company: req.user.id })
 
         if (!job) {
             res.status(404).json({
@@ -22,6 +23,7 @@ const createJob = async (req, res, next) => {
 
             return
         }
+
 
         res.status(201).json({
             status: "success",
@@ -55,9 +57,9 @@ const getAllJobs = async (req, res, next) => {
     
 
 
-    try {
+    try { 
 
-        const {data, numOfDocs, currentPage, pages} = await fetchDocs(req, Jobs, queryCriteria)
+        const {data, numOfDocs, currentPage, pages, prevPage, nextPage} = await fetchDocs(req, Jobs, queryCriteria, "company", "category")
 
         const numOfJobs = numOfDocs
         
@@ -75,6 +77,8 @@ const getAllJobs = async (req, res, next) => {
             status: "success",
             pages,
             currentPage,
+            prevPage,
+            nextPage,
             numOfJobs,
             jobs
         })
@@ -90,7 +94,8 @@ const getAllJobs = async (req, res, next) => {
 const getSingleJob = async (req, res, next) => {
 
     try {
-        const job = await Jobs.findById(req.params.id).populate("company")
+        const job = await Jobs.findById(req.params.id).populate("company").populate("category")
+        console.log(job.requirements);
 
         if (!job) {
             res.status(404).json({

@@ -1,14 +1,15 @@
-const fetch = async (req, model, criteria, populate) =>{
+const fetch = async (req, model, criteria, populate, secondPopulate) =>{
 
-    const pageSize = 10
+    const pageSize =  +req.query.limit || 10 
     const currentPage = +req.query.pageNum || 1
+    
     
 
     try {
 
         let numOfDocs = criteria ? await model.find(criteria).countDocuments() : await model.find().estimatedDocumentCount()
 
-        const data = await model.find(criteria).sort({ createdAt: -1 }).skip(pageSize * (currentPage - 1)).limit(pageSize)
+        const data = await model.find(criteria).sort({ createdAt: -1 }).skip(pageSize * (currentPage - 1)).limit(pageSize).populate(populate).populate(secondPopulate)
         console.log(data)
 
         if(!data) {
@@ -18,7 +19,18 @@ const fetch = async (req, model, criteria, populate) =>{
 
         const pages = Math.ceil(numOfDocs / pageSize)
 
-        return {data, currentPage, pageSize, numOfDocs, pages}
+        let prevPage;
+        let nextPage;
+
+        if(currentPage != 1){
+            prevPage = currentPage - 1 
+        }
+
+        if(currentPage != pages){
+            nextPage = currentPage + 1
+        }
+        return {data, currentPage, pageSize, numOfDocs, pages, prevPage, nextPage}
+
         
     } catch (error) {
         console.log(error)

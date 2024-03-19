@@ -35,6 +35,10 @@ const employeeSchema = new mongoose.Schema({
       default: "employee"
     },
 
+    featuredImg: {
+      type: String,
+    }
+
 
 
     

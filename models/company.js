@@ -33,7 +33,7 @@ const companySchema = new mongoose.Schema({
 
     description: {
         type: String,
-        // required: [true, "Your compnay description is required."]
+        required: [true, "Your compnay description is required."]
     },
 
     industry: {
@@ -42,6 +42,10 @@ const companySchema = new mongoose.Schema({
 
     logo: {
         type: String,
+    },
+
+    location: {
+        type: String
     },
 
     website: {
@@ -60,6 +64,14 @@ const companySchema = new mongoose.Schema({
 
     photos: {
         type: Array
+    },
+
+    phone: {
+        type: Number
+    },
+
+    foundedDate: {
+        type: String
     },
 
     companySize: {

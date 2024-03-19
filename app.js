@@ -34,6 +34,7 @@ app.get("/api/v1", (req, res) => { res.send("welcome to jobjunction api version 
 
 // ROUTED ENDPOINTS
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/auth/login", authRouter);
 app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/jobs", jobRouter);
 app.use("/api/v1/employees", userRouter);

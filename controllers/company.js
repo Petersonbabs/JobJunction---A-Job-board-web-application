@@ -144,6 +144,8 @@ const deleteCompany = async (req, res, next) => {
 const getCompanyDashboard = async (req, res, next) => {
 
     try {
+        res.send(req.user)
+        return
         const dashboard = await Companies.findById(req.user.id);
         if (!dashboard) {
             res.status(200).json({
@@ -169,7 +171,7 @@ const getCompanyJobs = async (req, res, next) => {
     const jobsCriteria = { company: req.params.id }
 
     try {
-        const { data, currentPage, pages, numOfDocs } = await fetchDocs(req, Jobs, jobsCriteria);
+        const { data, currentPage, pages, numOfDocs } = await fetchDocs(req, Jobs, jobsCriteria, "company");
 
         const numOfJobs = numOfDocs
         const jobs = await data

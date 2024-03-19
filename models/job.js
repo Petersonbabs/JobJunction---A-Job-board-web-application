@@ -12,6 +12,12 @@ const jobSchema = new mongoose.Schema({
         type: String,
         required: [true, "Job description is required"],
     },
+
+    location: {
+        type: String,
+        reqiured: true
+    },
+
     company: {
         // todo: reference compnay collection
         type: mongoose.Schema.ObjectId,
@@ -22,6 +28,7 @@ const jobSchema = new mongoose.Schema({
     salary: {
         type: String,
         required: [true, "Job salary is required"],
+        
     },
 
     requirements: {
@@ -40,14 +47,26 @@ const jobSchema = new mongoose.Schema({
         ref: "categories"
     },
 
+    jobType: {
+        type: String
+    },
+
     hiringNum: {
         type: Number,
     },
+
+    gender: {
+        type: String
+    },
+    status: {
+        type: String,
+        default: "open" // closed
+    }
 
     // todo: add feedback
     // feedback: {
         
     // }
-})
+}, {timestamps: true})
 
-module.exports = mongoose.model("Jobs", jobSchema)
+module.exports = mongoose.model("Jobs", jobSchema) 

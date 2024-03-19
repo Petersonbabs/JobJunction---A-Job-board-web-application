@@ -2,25 +2,27 @@ const Employees = require("../models/employee");
 const Companies = require("../models/company");
 const signJwt = require("../utils/jwt");
 const bcrypt = require("bcryptjs");
+const BlacklistTokens = require("../models/tokenBlacklist");
 
 // CREATE EMPLOYEE
 const createEmployee = async (req, res, next) => {
 
 
     try {
-        const employee = await Employees.create(req.body);
-        if (!employee) {
+        const user = await Employees.create(req.body)
+        if (!user) {
             res.status(404).json({
                 status: "Failed",
                 message: "Unable to create employee."
             })
         }
 
-        const token = await signJwt(employee.id, employee.email)
+        const token = await signJwt(user.id, user.email)
 
-        res.status(201).cookie("token", token, { maxAge: 60 * 60 * 1000, httpOnly: true }).json({
+        res.status(201).json({
             status: "Success",
-            employee
+            token,
+            user
         })
 
 
@@ -33,21 +35,23 @@ const createEmployee = async (req, res, next) => {
 
 // create company
 const createCompany = async (req, res, next) => {
-    try {
-        const company = await Companies.create(req.body);
 
-        if (!company) {
+    try {
+        const user = await Companies.create(req.body);
+
+        if (!user) {
             res.status(404).json({
                 status: "Failed",
                 message: "Unable to create company"
             })
         }
 
-        const token = await signJwt(company.id, company.email)
+        const token = await signJwt(user.id, user.email)
 
-        res.status(201).cookie("token", token, { maxAge: 60 * 60 * 1000, httpOnly: true }).json({
+        res.status(201).json({
             status: "Success",
-            company
+            token,
+            user
         })
 
 
@@ -59,14 +63,29 @@ const createCompany = async (req, res, next) => {
 
 
 // logout
-const logout = (req, res, next) => {
+const logout = async (req, res) => {
+    const { token } = req.body;
+    
+    if (!token) {
+        res.status(404).json({
+            status: "fail",
+            message: "Please supply token in request body",
+        })
+    }
 
-    res.clearCookie("token")
+    const blacklistedToken = await BlacklistTokens.create({ token })
+
+    if (!blacklistedToken) {
+        res.status(404).json({
+            status: "fail",
+            message: "Fail to blacklist token",
+        })
+    }
+
     res.status(200).json({
         status: "success",
-        message: "logout successful!"
+        message: "Logout successful",
     })
-
 }
 
 // log any user in
@@ -83,8 +102,7 @@ const login = async (req, res, next) => {
         user = await Employees.findOne({ email }).select("+password") || await Companies.findOne({ email }).select("+password")
 
         const correctPassword = user ? await bcrypt.compare(password, user.password) : ""
-
-        console.log(correctPassword);
+        
 
         if (!user || !correctPassword) {
 
@@ -96,8 +114,10 @@ const login = async (req, res, next) => {
         } else {
             const token = await signJwt(user.id, email)
 
-            res.status(200).cookie("token", token, { maxAge: 60 * 60 * 1000, httpOnly: true }).json({
+            res.status(200).json({
                 status: "login success",
+                token,
+                user
             })
         }
 
@@ -105,6 +125,7 @@ const login = async (req, res, next) => {
 
     } catch (error) {
         next(error)
+        console.log(error)
     }
 }
 
