@@ -64,15 +64,17 @@ const getSingleCompany = async (req, res, next) => {
     }
 }
 
-// TODO: pROTECT THIS FUNCTION
+
+// TODO: PROTECT THIS FUNCTION
 const updateCompany = async (req, res, next) => {
-    // get logged in user's id
+
+    console.log(req.body);
 
     try {
         // compare the user's id with the id on the profile
-        const company = await Companies.findById(req.params.id)
+        const response = await Companies.findById(req.params.id)
 
-        if (company.id !== req.user.id) {
+        if (response.id !== req.user.id) {
             res.status(403).json({
                 status: "failed",
                 message: "Access denied. You don;t own this company"
@@ -91,9 +93,11 @@ const updateCompany = async (req, res, next) => {
             return
         }
 
+        console.log(updatedCompany)
+
         res.status(200).json({
             status: "success",
-            company: updatedCompany
+            user: updatedCompany
         })
 
     } catch (error) {
@@ -168,17 +172,24 @@ const getCompanyDashboard = async (req, res, next) => {
 
 const getCompanyJobs = async (req, res, next) => {
 
+    const pageSize = +req.query.limit || 10
+    const currentPage = +req.query.pageNum || 1
     const jobsCriteria = { company: req.params.id }
 
     try {
-        const { data, currentPage, pages, numOfDocs } = await fetchDocs(req, Jobs, jobsCriteria, "company");
 
-        const numOfJobs = numOfDocs
-        const jobs = await data
+
+
+        const numOfJobs = jobsCriteria ? await Jobs.find(jobsCriteria).countDocuments() : ""
+
+
+        const jobs = await Jobs.find(jobsCriteria).skip(pageSize * (currentPage - 1)).limit(pageSize)
+
+        const pages = Math.ceil(numOfJobs / pageSize)
 
         if (!jobs) {
             res.status(404).json({
-                status: "failed",
+                status: "fail",
                 message: "unable to fetch the jobs in this company"
             })
 

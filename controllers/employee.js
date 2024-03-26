@@ -105,6 +105,7 @@ const updateEmployee = async (req, res, next) => {
         }
 
         const updatedEmployee = await Employees.findByIdAndUpdate(req.user.id, req.body, { new: true, runValidators: true });
+        
 
         if (!updatedEmployee) {
             res.status(404).json({
@@ -116,7 +117,7 @@ const updateEmployee = async (req, res, next) => {
 
         res.status(200).json({
             status: "success",
-            employee: updatedEmployee
+            user: updatedEmployee
         })
     } catch (error) {
         console.log(error);

@@ -11,13 +11,15 @@ const createJob = async (req, res, next) => {
     
     try {
         
-        const assignedCategory = await Categories.findById(category);
+        const assignedCategory = await Categories.findOne({title: {$regex: category, $options: "i"}});
+        
+
 
         const job = await Jobs.create({ title, description, salary, requirements, applicationDeadline, location, gender, jobType, category : assignedCategory.id, hiringNum, feedback, company: req.user.id })
 
         if (!job) {
             res.status(404).json({
-                status: "failed",
+                status: "fail",
                 message: "Unable to post job"
             })
 
@@ -27,6 +29,7 @@ const createJob = async (req, res, next) => {
 
         res.status(201).json({
             status: "success",
+            message: "Job successfully posted",
             job
         })
 
@@ -120,11 +123,16 @@ const getSingleJob = async (req, res, next) => {
 // Update job
 const updateJob = async (req, res, next) => {
 
+    const { title, description, salary, requirements, applicationDeadline, category, hiringNum, feedback, location, gender, jobType } = req.body
+
     try {
 
+        const assignedCategory = await Categories.findOne({title: {$regex: category, $options: "i"}});
+
         const job = await Jobs.findById(req.params.id);
+
         
-        if (job.company !== req.user.id && req.user.role !== "admin") {
+        if (job.company.toJSON() !== req.user.id && req.user.role !== "admin") {
             res.status(403).json({
                 status: "failed",
                 message: "Access denied."
@@ -132,19 +140,22 @@ const updateJob = async (req, res, next) => {
             return
         }
 
-        const updatedJob = await Jobs.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+        const updatedJob = await Jobs.findByIdAndUpdate(req.params.id, { title, description, salary, requirements, applicationDeadline, location, gender, jobType, category : assignedCategory.id, hiringNum, feedback, company: req.user.id }, { new: true, runValidators: true });
 
         if (!updatedJob) {
+
             res.status(404).json({
-                status: "failed",
+                status: "fail",
                 message: "Unable to update this Job."
             })
+
             return
         }
 
         res.status(200).json({
             status: "success",
-            employee: updatedJob
+            message: "successfully updated",
+            job: updatedJob
         })
 
     } catch (error) {
@@ -154,14 +165,14 @@ const updateJob = async (req, res, next) => {
 
 }
 
-// Update job
+// Delete job
 const deleteJob = async (req, res, next) => {
 
     try {
 
         const job = await Jobs.findById(req.params.id);
         
-        if (job.company !== req.user.id && req.user.role !== "admin") {
+        if (job.company.toString() !== req.user.id && req.user.role !== "admin") {
             res.status(403).json({
                 status: "failed",
                 message: "Access denied."

@@ -1,8 +1,9 @@
 const router = require("express").Router();
-const { createCategory, getCategoryJobs, getAllCategories, updateCategory, deleteCategory } = require("../controllers/category");
+const { createCategory, getCategoryJobs, getAllCategories, updateCategory, deleteCategory, getCategoryLength } = require("../controllers/category");
 const { isAuthenticated, isAdmin,  } = require("../middlewares/auth");
 
 router.route("/").get(getAllCategories);
+router.route("/length").get(getCategoryLength);
 
 router.route("/:id").patch(isAuthenticated, isAdmin, updateCategory).delete(isAuthenticated, isAdmin, deleteCategory);
 

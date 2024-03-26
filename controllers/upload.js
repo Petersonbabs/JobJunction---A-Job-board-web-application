@@ -1,27 +1,67 @@
 const { dataUri } = require("../middlewares/multer");
 const { uploader } = require("../middlewares/cloudinary");
 
+const uploadImage = async (req, res, next) => {
+
+    
+
+    try {
+
+        
+        
+        if (!req.file) {
+            console.log("No file received");
+            next()
+        } else {
+            
+            const file = dataUri(req).content;
+            
+            const result = await uploader.upload(file, {
+                folder: "jobjunction/featuredImages"
+            })
+            
+            
+
+            req.body.featuredImg = result.secure_url
+            next()
+
+
+        }
+
+
+
+
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+
+
+};
 
 
 const uploadFile = async (req, res, next) => {
     try {
 
-
+        
+        
         if (!req.file) {
             console.log("No file received");
             return res.send({
                 success: false
             });
-
+            
         } else {
-
+            
             const file = dataUri(req).content;
-
+            
             const result = await uploader.upload(file, {
                 folder: "jobjunction/resumes"
             })
+            console.log(result)
+            
 
-            req.body.resume = result
+            req.body.resume = result.secure_url
             next()
 
 
@@ -63,4 +103,4 @@ const uploadResume = async (req, res, next) => {
 
 }
 
-module.exports = { uploadFile, uploadResume }
+module.exports = { uploadFile, uploadResume, uploadImage }

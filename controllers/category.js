@@ -126,6 +126,7 @@ const getCategoryJobs = async (req, res, next) => {
 
         const numOfJobs = numOfDocs
         const jobs = await data
+        console.log(jobs)
 
         if (!jobs) {
             res.status(404).json({
@@ -151,4 +152,26 @@ const getCategoryJobs = async (req, res, next) => {
 
 }
 
-module.exports = { createCategory, getCategoryJobs, getAllCategories, updateCategory, deleteCategory }
+// get category length
+const getCategoryLength = async (req, res, next) => {
+    try {
+        const categories = await Jobs.distinct("category")
+        const categoriesWithLength = []
+
+        for (const category of categories) {
+            const jobs = await Jobs.find({ category })
+            categoriesWithLength.push({ category, length: jobs.length })
+        }
+
+        res.status(200).json({
+            status: "Success",
+            message: "Length of categories fetched successfully.",
+            categories: categoriesWithLength
+        })
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+}
+
+module.exports = { createCategory, getCategoryJobs, getAllCategories, updateCategory, deleteCategory, getCategoryLength }

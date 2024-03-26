@@ -38,7 +38,7 @@ app.use("/api/v1/auth/login", authRouter);
 app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/jobs", jobRouter);
 app.use("/api/v1/employees", userRouter);
-app.use("/api/v1/employee", userRouter);
+app.use("/api/v1/employee", upload.single('featuredImg'), userRouter);
 app.use("/api/v1/companies", companyRouter)
 app.use("/api/v1/company", companyRouter)
 app.use("/api/v1/category", categoryRouter)

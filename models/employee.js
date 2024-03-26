@@ -10,6 +10,14 @@ const employeeSchema = new mongoose.Schema({
         maxLength: 42
     },
 
+    about: {
+      type: String
+    },
+
+    age: {
+      type: String
+    },
+
     email: {
         type: String,
         required: [true, "Email is required."],
@@ -30,15 +38,38 @@ const employeeSchema = new mongoose.Schema({
       default: "No profession"
     },
 
+    website: {
+      type: String
+    },
+
     role: {
       type: String,
       default: "employee"
     },
 
+    phoneNumber: {
+      type: Number
+    },
+
     featuredImg: {
       type: String,
-    }
+    },
+    gender: {
+      type: String
+      
+    },
+    location: {
+      type: String
+    },
 
+    qualification: {
+      type: String
+      
+    },
+    experience: {
+      type: String
+    },
+   
 
 
     

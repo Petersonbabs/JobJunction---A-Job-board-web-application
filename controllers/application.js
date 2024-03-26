@@ -12,7 +12,7 @@ const createApplication = async (req, res, next) => {
 
         const { company } = await Jobs.findById(req.params.id)
 
-        const application = await Applications.create({ candidate: req.user.id, applicationStatus, job: req.params.id, message, company, resume: resume.secure_url })
+        const application = await Applications.create({ candidate: req.user.id, applicationStatus, job: req.params.id, message, company, resume })
 
         if (!application) {
             res.status(404).json({
@@ -40,44 +40,53 @@ const createApplication = async (req, res, next) => {
 
 // View all single job applications (employees vs company)
 const getAllApplications = async (req, res, next) => {
-    res.json({message: "your aplications"})
-
-    // const applicationCriteria = {}
+    
+    const applicationCriteria = {}
     
 
-    // if (req.user.role == "company") {
-    //     applicationCriteria.company = req.user.id;
-    // }
+    if (req.user.role == "company") {
+        applicationCriteria.company = req.user.id;
+        if(req.query.jobId){
+            applicationCriteria.job = req.query.jobId
+        }
+        if(req.query.status){
+            applicationCriteria.job = req.query.status
+        }
+    } else if (req.user.role == "employee"){
+        applicationCriteria.candidate = req.user.id
+    }
 
-    // try {
+
+
+    try {
         
 
-    //     const { data, pages, numOfDocs, currentPage } = await fetchData(req, Applications, applicationCriteria);
+        const { data, pages, numOfDocs, currentPage } = await fetchData(req, Applications, applicationCriteria, "candidate", "company", "job");
 
-    //     const applications = data
-    //     const numOfApplications = numOfDocs
+        const applications = data
+        const numOfApplications = numOfDocs
 
-    //     if (!applications) {
-    //         res.status(404).json({
-    //             status: "failed",
-    //             message: "unable to fetch applications"
-    //         })
+        if (!applications) {
+            res.status(404).json({
+                status: "fail",
+                message: "No applications found"
+            })
 
-    //         return
-    //     }
+            return
+        }
 
-    //     res.status(200).json({
-    //         status: "success",
-    //         pages,
-    //         currentPage,
-    //         numOfApplications,
-    //         applications
-    //     })
+        res.status(201).json({
+            status: "success",
+            pages,
+            currentPage,
+            numOfApplications,
+            applications
+        })
 
-    // } catch (error) {
-    //     console.log(error)
-    //     next(error)
-    // }
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
 
 }
 
@@ -126,6 +135,8 @@ const deleteApplication = async (req, res, next) => {
 
 // update application
 const updateApplication = async (req, res, next) => {
+    console.log(req.params)
+    console.log(req.body)
     try {
 
         const application = await Applications.findById(req.params.id)
@@ -150,7 +161,7 @@ const updateApplication = async (req, res, next) => {
 
        const updatedApplication = await Applications.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});
 
-        res.status(200).json({ status: "success", message: "successfully updated.", updatedApplication })
+        res.status(200).json({ status: "success", message: "successfully updated.", application: updatedApplication })
 
     } catch (error) {
         console.log(error)

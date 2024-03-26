@@ -16,18 +16,18 @@ const applicationSchema = new Schema({
 
     applicationStatus: {
         type: String,
-        default: "pending review"
+        default: "pending"
     },
 
     job: {
         type: Schema.Types.ObjectId,
         required: [true, "You must apply to a job"],
-        ref: "jobs"
+        ref: "Jobs"
     },
 
     company: {
         type: Schema.Types.ObjectId,
-        ref: "companies",
+        ref: "Companies",
         required: true
     },
 

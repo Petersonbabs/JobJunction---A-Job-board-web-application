@@ -66,7 +66,7 @@ const companySchema = new mongoose.Schema({
         type: Array
     },
 
-    phone: {
+    phoneNumber: {
         type: Number
     },
 

@@ -13,6 +13,7 @@ const isAuthenticated = async (req, res, next) => {
     }
     
     
+    
     if (!token) {
         res.status(401).json({
             status: "fail",
@@ -30,12 +31,14 @@ const isAuthenticated = async (req, res, next) => {
         })
         return
     }
+    
 
     
     const decoded = jwt.verify(token, process.env.jwtSecret);
+   
     
     const user = await Companies.findById(decoded.id) || await Employees.findById(decoded.id)
-    // console.log(user)
+    
     
     
 
