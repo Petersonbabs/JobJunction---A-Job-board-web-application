@@ -6,7 +6,7 @@ const { Console } = require("console");
 // Create Job
 const createJob = async (req, res, next) => {
 
-    const { title, description, salary, requirements, applicationDeadline, category, hiringNum, feedback, location, gender, jobType } = req.body
+    const { title, description, salary, requirements, applicationDeadline, category, hiringNum, feedback, location, gender, jobType, experience } = req.body
 
     
     try {
@@ -15,7 +15,7 @@ const createJob = async (req, res, next) => {
         
 
 
-        const job = await Jobs.create({ title, description, salary, requirements, applicationDeadline, location, gender, jobType, category : assignedCategory.id, hiringNum, feedback, company: req.user.id })
+        const job = await Jobs.create({ title, description, salary, requirements, experience, applicationDeadline, location, gender, jobType, category : assignedCategory.id, hiringNum, feedback, company: req.user.id })
 
         if (!job) {
             res.status(404).json({
@@ -49,12 +49,28 @@ const getAllJobs = async (req, res, next) => {
 
     if (req.query.search) {
         const { search } = req.query
+        const regex = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
         queryCriteria = {
             $or: [
-                { title: { $regex: search, $options: 'i' }  },
-                {description: { $regex: search, $options: 'i' } }
+                { title: { $regex: regex}  },
+                {description: { $regex: regex} },
+                {location: { $regex: regex} },
             ]
         }
+    }
+
+    if(req.query.location){
+        queryCriteria.location = req.query.location
+    }
+    if(req.query.experience){
+        queryCriteria.experience = req.query.experience
+    }
+    if(req.query.jobType){
+        queryCriteria.jobType = req.query.jobType
+        
+    }
+    if(req.query.status){
+        queryCriteria.status = req.query.status
     }
 
     

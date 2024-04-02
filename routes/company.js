@@ -2,6 +2,7 @@ const router = require("express").Router();
 const { getAllApplications } = require("../controllers/application");
 const { updateCompany, deleteCompany, getCompanyJobs } = require("../controllers/company");
 const { getAllCompanies, getSingleCompany, getCompanyDashboard } = require("../controllers/company");
+const { uploadImage } = require("../controllers/upload");
 const { isAuthenticated, isCompany } = require("../middlewares/auth");
 
 

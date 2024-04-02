@@ -10,9 +10,10 @@ const fetch = async (req, model, criteria, populate, secondPopulate, thirdPopula
         let numOfDocs = criteria ? await model.find(criteria).countDocuments() : await model.find().estimatedDocumentCount()
 
         const data = await model.find(criteria).sort({ createdAt: -1 }).skip(pageSize * (currentPage - 1)).limit(pageSize).populate(populate).populate(secondPopulate).populate(thirdPopulate)
-        console.log(data)
+        
 
         if(!data) {
+            console.log("not found")
             return null
         }
 

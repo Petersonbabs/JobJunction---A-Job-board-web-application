@@ -8,6 +8,7 @@ const upload = multer({storage: storage})
 const  dUri = new Datauri();
 
 const dataUri = (req) => {
+    
     return dUri.format( path.extname(req.file.originalname).toString(), req.file.buffer )
 }
 

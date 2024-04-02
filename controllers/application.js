@@ -6,24 +6,27 @@ const fetchData = require("../middlewares/fetching");
 const createApplication = async (req, res, next) => {
 
     const { applicationStatus, message, resume } = req.body
+    
 
     try { 
 
 
         const { company } = await Jobs.findById(req.params.id)
+        
 
         const application = await Applications.create({ candidate: req.user.id, applicationStatus, job: req.params.id, message, company, resume })
 
         if (!application) {
             res.status(404).json({
                 status: "failed",
-                message: "Unable to create application."
+                message: "Unable to Submit application. Please try again."
             })
             return
         }
 
-        res.status(404).json({
+        res.status(201).json({
             status: "success",
+            message: "Your application has been sent!",
             application
         })
 
@@ -75,7 +78,7 @@ const getAllApplications = async (req, res, next) => {
             return
         }
 
-        res.status(201).json({
+        res.status(200).json({
             status: "success",
             pages,
             currentPage,

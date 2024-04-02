@@ -10,10 +10,17 @@ const companySchema = new mongoose.Schema({
         match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Provide a valid email address."]
     },
 
-    fullName: {
+    firstName: {
         type: String,
-        required: [true, "Your name is required."],
+        required: [true, "Your first name is required."],
         trim: true,
+        maxLength: 42
+    },
+    lastName: {
+        type: String,
+        required: [true, "Your last name is required."],
+        trim: true,
+        maxLength: 42
     },
 
 
@@ -40,8 +47,9 @@ const companySchema = new mongoose.Schema({
         type: String,
     },
 
-    logo: {
-        type: String,
+    featuredImg: {
+        type: 
+        String,
     },
 
     location: {

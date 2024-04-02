@@ -92,6 +92,7 @@ const getEmployeeDasboard = async (req, res, next) => {
 // Update employee
 const updateEmployee = async (req, res, next) => {
 
+
     try {
 
         const employee = await Employees.findById(req.params.id)
@@ -114,6 +115,8 @@ const updateEmployee = async (req, res, next) => {
             })
             return
         }
+
+        
 
         res.status(200).json({
             status: "success",

@@ -68,7 +68,7 @@ const getSingleCompany = async (req, res, next) => {
 // TODO: PROTECT THIS FUNCTION
 const updateCompany = async (req, res, next) => {
 
-    console.log(req.body);
+    console.log(req.body)
 
     try {
         // compare the user's id with the id on the profile
@@ -77,12 +77,12 @@ const updateCompany = async (req, res, next) => {
         if (response.id !== req.user.id) {
             res.status(403).json({
                 status: "failed",
-                message: "Access denied. You don;t own this company"
+                message: "Access denied. You don't own this company"
             })
             return
         }
 
-        const updatedCompany = await Companies.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        const updatedCompany = await Companies.findByIdAndUpdate(req.user.id, req.body, { new: true, runValidators: true })
 
 
         if (!updatedCompany) {

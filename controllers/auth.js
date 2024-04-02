@@ -7,13 +7,21 @@ const BlacklistTokens = require("../models/tokenBlacklist");
 // CREATE EMPLOYEE
 const createEmployee = async (req, res, next) => {
 
+    if(!req.body){
+        res.status(404).json({
+            status: "fail",
+            message: "Please complete the form."
+        })
+    }
+
+    
 
     try {
         const user = await Employees.create(req.body)
         if (!user) {
             res.status(404).json({
-                status: "Failed",
-                message: "Unable to create employee."
+                status: "Fail",
+                message: "Unable to sign up."
             })
         }
 
@@ -21,6 +29,7 @@ const createEmployee = async (req, res, next) => {
 
         res.status(201).json({
             status: "Success",
+            message: "Sign up successful! Redirecting...",
             token,
             user
         })
@@ -50,6 +59,7 @@ const createCompany = async (req, res, next) => {
 
         res.status(201).json({
             status: "Success",
+            message: "Sign up successful! Redirecting...",
             token,
             user
         })
@@ -96,6 +106,7 @@ const login = async (req, res, next) => {
         res.json({
             message: "Please complete the login form"
         })
+        return
     }
 
     try {
@@ -107,7 +118,7 @@ const login = async (req, res, next) => {
         if (!user || !correctPassword) {
 
             res.status(403).json({
-                status: "failed",
+                status: "fail",
                 message: "Email or password is incorrect"
             })
             return
@@ -115,7 +126,8 @@ const login = async (req, res, next) => {
             const token = await signJwt(user.id, email)
 
             res.status(200).json({
-                status: "login success",
+                status: "success",
+                message: "Login successful! Redirecting...",
                 token,
                 user
             })

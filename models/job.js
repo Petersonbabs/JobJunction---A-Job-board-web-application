@@ -17,6 +17,9 @@ const jobSchema = new mongoose.Schema({
         type: String,
         reqiured: true
     },
+    experience: {
+        type: String
+    },
 
     company: {
         // todo: reference compnay collection
@@ -58,6 +61,7 @@ const jobSchema = new mongoose.Schema({
     gender: {
         type: String
     },
+
     status: {
         type: String,
         default: "open" // closed

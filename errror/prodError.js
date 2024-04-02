@@ -1,4 +1,18 @@
 
+
+const handleValidationErrors = (err, res) => {
+    // Extract error messages from the validation error
+    const errorMessages = Object.values(err.errors).map(error => error.message);
+
+    // Return response with validation error messages
+    return res.status(400).json({
+        status: 'Failed',
+        message: errorMessages[0]
+    });
+};
+
+
+
 const sendDuplicateError = (err, res) => {
     const errKey = Object.keys(err.keyValue)[0]
     const errVal = Object.values(err.keyValue)[0]
@@ -33,6 +47,8 @@ const handleProdError = (err, res) => {
         })
 
         return
+    } else if(err.name === 'ValidationError') {
+        return handleValidationErrors(err, res);
     }
 
 }

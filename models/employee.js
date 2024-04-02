@@ -3,9 +3,15 @@ const bcrypt = require("bcryptjs")
 
 const employeeSchema = new mongoose.Schema({
   
-    fullName: {
+    firstName: {
         type: String,
-        required: [true, "Your name is required."],
+        required: [true, "Your first name is required."],
+        trim: true,
+        maxLength: 42
+    },
+    lastName: {
+        type: String,
+        required: [true, "Your last name is required."],
         trim: true,
         maxLength: 42
     },
@@ -30,6 +36,8 @@ const employeeSchema = new mongoose.Schema({
         type: String,
         required: [true, "Password if required."],
         minLength: [8, "Password must be at least 8 characters."],
+        match: [/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
+        'Password musr contain at least one uppercase letter, one lowercase letter, and one number'],
         select: false
     },
 
