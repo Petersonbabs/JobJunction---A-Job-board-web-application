@@ -2,7 +2,7 @@ require("dotenv").config()
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-const cookieParser = require("cookie-parser");
+// const cookieParser = require("cookie-parser");
 const errorHandler = require("./errror/error");
 const { cloudinaryConfig} = require("./middlewares/cloudinary");
 const { upload } = require("./middlewares/multer");
@@ -23,7 +23,7 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"))
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use("*", cloudinaryConfig)
 
 
